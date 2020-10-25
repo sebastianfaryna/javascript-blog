@@ -2,18 +2,14 @@
 
 {
 
-  // const titleClickHandler = function(){
-  // console.log('Link was clicked!');
-  // }
-
-  // const links = document.querySelectorAll('.titles a');
-
-  // for(let link of links){
-  //   link.addEventListener('click', titleClickHandler);
-  // }
+  // document.getElementById('test-button').addEventListener('click', function () {
+  //   const links = document.querySelectorAll('.titles a');
+  //   console.log('links:', links);
+  // });
 
   //Visual Studio Code gdy klikam Shift + Alt + F to dodaje spację po 'function' jak to zmienić? Oraz żeby domyślnie zawijało wiersze, bez klikania Alt + Z?
-    const titleClickHandler = function (event) {
+  const titleClickHandler = function (event) {
+    const clickedElement = this;
     console.log('Link was clicked!');
     console.log(event);
 
@@ -25,7 +21,10 @@
       console.log(activeLink);
     }
 
-    /* add class 'active' to the clicked link */
+    /* [IN PROGRESS] add class 'active' to the clicked link */
+    clickedElement.classList.add('active');
+    console.log('clickedElement:', clickedElement);
+    console.log('clickedElement (with plus): ' + clickedElement);
 
     /* [DONE] remove class 'active' from all articles */
     const activeArticles = document.querySelectorAll('.posts article.active');
