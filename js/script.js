@@ -37,7 +37,7 @@
     const targetArticle = document.querySelector(articleSelector);
     targetArticle.classList.add('active');
     console.log('FIND href targetArticle', targetArticle);
-  }
+  };
 
   // Zapisanie ustawień skryptu w stałych. Prefiks opt- znaczy "options".
   const optArticleSelector = '.post',
@@ -46,11 +46,11 @@
 
   function generateTitleLinks() {
 
-    // [DONE] remove contents of titleList
+    // remove contents of titleList
     const titleList = document.querySelector(optTitleListSelector);
     titleList.innerHTML = '';
 
-    let html = "";
+    let html = '';
 
     // for each article
     const articles = document.querySelectorAll(optArticleSelector);
