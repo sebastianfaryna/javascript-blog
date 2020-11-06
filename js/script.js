@@ -3,7 +3,7 @@
 {
 
   // Visual Studio Code gdy klikam Shift + Alt + F to dodaje spację po 'function' jak to zmienić? Oraz żeby domyślnie zawijało wiersze, bez klikania Alt + Z?
-  const titleClickHandler = function (event) {
+  const titleClickHandler = function(event) {
     event.preventDefault(); //zmienia domyślne ustawienia 'event' - w tym przypadku adres url strony NIE będzie się zmieniał wraz z klikaniem w artykuły, dlatego jest przed deklaracją zmiennej/stałej poniżej
     const clickedElement = this;
     // console.log('Link was clicked!');
@@ -43,9 +43,10 @@
   const optArticleSelector = '.post',
     optTitleSelector = '.post-title',
     optTitleListSelector = '.titles',
-    optArticleTagsSelector = '.post-tags .list';
+    optArticleTagsSelector = '.post-tags .list',
+    optArticleAuthorSelector = '.post-author';
 
-  function generateTitleLinks() {
+  function generateTitleLinks(customSelector = '') {
 
     // remove contents of titleList
     const titleList = document.querySelector(optTitleListSelector);
@@ -54,9 +55,9 @@
     let html = '';
 
     // for each article
-    const articles = document.querySelectorAll(optArticleSelector);
+    const articles = document.querySelectorAll(optArticleSelector + customSelector);
     for (let article of articles) {
-      // console.log(article);
+      console.log('CUSTOM SELECTOR', optArticleSelector + customSelector);
 
       // get the article id and save it to the const
       const articleId = article.getAttribute('id');
@@ -107,23 +108,23 @@
 
       /* get tags from data-tags attribute */
       const articleTags = article.getAttribute('data-tags');
-      console.log('articleTags: ', articleTags);
+      // console.log('articleTags: ', articleTags);
 
       /* split tags into array */
       const articleTagsArray = articleTags.split(' ');
-      console.log('articleTagsArray: ', articleTagsArray);
+      // console.log('articleTagsArray: ', articleTagsArray);
 
       /* START LOOP: for each tag */
       for (let tag of articleTagsArray) {
-        console.log('tag: ', tag);
+        // console.log('tag: ', tag);
 
         /* generate HTML of the link */
-        const tagHTML = '<li><a href="#tag-' + tag + '"><span>' + tag + '</span></a></li> '; //<-- dodałem na końcu spację, bo bez niej tagi są jednym ciągiem liter
-        console.log('tagHTML: ', tagHTML);
+        const tagHTML = '<li><a href="#tag-' + tag + '"><span>' + tag + '</span></a></li>';
+        // console.log('tagHTML: ', tagHTML);
 
         /* add generated code to html variable */
         html = html + tagHTML;
-        console.log('html: ', html);
+        // console.log('html: ', html);
 
         /* END LOOP: for each tag */
       }
@@ -136,4 +137,95 @@
 
   }
   generateTags();
+
+
+  /*      AUTORZY ARTYKUŁU      */
+
+  function generateAuthors() {
+
+    const articles = document.querySelectorAll(optArticleSelector);
+
+    /* START LOOP for every article */
+    for (let article of articles) {
+
+      /* find authors wrapper */
+      const authorWrapper = article.querySelector(optArticleAuthorSelector);
+
+      /* get authors from data-author attribute */
+      const articleAuthor = article.getAttribute('data-author');
+      // console.log('AUTOR:', articleAuthor);
+
+      /* generate HTML of the link */
+      const tagHTML = 'by <a href="#author-' + articleAuthor + '"><span>' + articleAuthor + '</span></a>';
+
+      /* insert HTML of all the links into the tags wrapper */
+      authorWrapper.innerHTML = tagHTML;
+
+      /* END LOOP: for every article: */
+    }
+  }
+  generateAuthors();
+
+
+  /*    KLINIĘCIE W TAG   */
+
+  function tagClickHandler(event) {
+    /* prevent default action for this event */
+    event.preventDefault();
+    console.log('CZY BYŁ KLIK W TAG?');
+
+    /* make new constant named "clickedElement" and give it the value of "this" */
+    const clickedElement = this;
+
+    /* make a new constant "href" and read the attribute "href" of the clicked element */
+    const href = clickedElement.getAttribute('href');
+
+    /* make a new constant "tag" and extract tag from the "href" constant */
+    const tag = href.replace('#tag-', '');
+
+    /* find all tag links with class active */
+    const activeTags = document.querySelectorAll('a.active[href^="#tag-"]');
+
+    /* START LOOP: for each active tag link */
+    for (activeTag of activeTags) {
+
+      /* remove class active */
+      activeTags.classList.remove('active');
+
+      /* END LOOP: for each active tag link */
+    }
+
+    /* find all tag links with "href" attribute equal to the "href" constant */
+    const tagLinks = document.querySelectorAll('a[href="' + href + '"]');
+
+    /* START LOOP: for each found tag link */
+    for (let tagLink of tagLinks) {
+
+      /* add class active */
+      tagLink.classList.add('active');
+
+      /* END LOOP: for each found tag link */
+    }
+
+    /* execute function "generateTitleLinks" with article selector as argument */
+    generateTitleLinks('[data-tags~="' + tag + '"]');
+  }
+
+  function addClickListenersToTags() {
+
+    /* find all links to tags */
+    const allLinksToTags = document.querySelectorAll('a[href^="#tag-"]');
+
+    /* START LOOP: for each link */
+    for (let linkToTag of allLinksToTags) {
+
+      /* add tagClickHandler as event listener for that link */
+      linkToTag.addEventListener('click', tagClickHandler);
+
+      /* END LOOP: for each link */
+    }
+  }
+
+  addClickListenersToTags();
+
 }
