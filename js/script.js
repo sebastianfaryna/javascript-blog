@@ -44,7 +44,8 @@
     optTitleSelector = '.post-title',
     optTitleListSelector = '.titles',
     optArticleTagsSelector = '.post-tags .list',
-    optArticleAuthorSelector = '.post-author';
+    optArticleAuthorSelector = '.post-author',
+    optTagsListSelector = '.tags.list';
 
   function generateTitleLinks(customSelector = '') {
 
@@ -91,40 +92,41 @@
 
   function generateTags() {
 
+    // /* [NEW] create a new variable allTags with an empty array */
+    // let allTags = [];
+
     /* find all articles */
     const articles = document.querySelectorAll(optArticleSelector);
 
-
     /* START LOOP: for every article: */
     for (let article of articles) {
-      // console.log('article: ', article);
 
       /* find tags wrapper */
       const tagsWrapper = article.querySelector(optArticleTagsSelector);
-      // console.log('tagsWrapper: ', tagsWrapper);
 
       /* make html variable with empty string */
       let html = '';
 
       /* get tags from data-tags attribute */
       const articleTags = article.getAttribute('data-tags');
-      // console.log('articleTags: ', articleTags);
 
       /* split tags into array */
       const articleTagsArray = articleTags.split(' ');
-      // console.log('articleTagsArray: ', articleTagsArray);
 
       /* START LOOP: for each tag */
       for (let tag of articleTagsArray) {
-        // console.log('tag: ', tag);
 
         /* generate HTML of the link */
         const tagHTML = '<li><a href="#tag-' + tag + '"><span>' + tag + '</span></a></li>';
-        // console.log('tagHTML: ', tagHTML);
 
         /* add generated code to html variable */
         html = html + tagHTML;
-        // console.log('html: ', html);
+
+        // /* [NEW] check if this link is NOT already in allTags */
+        // if (allTags.indexOf(linkHTML) == -1) {
+        //   /* [NEW] add generated code to allTags array */
+        //   allTags.push(linkHTML);
+        // }
 
         /* END LOOP: for each tag */
       }
@@ -135,6 +137,12 @@
       /* END LOOP: for every article: */
     }
 
+    // /* [NEW] find list of tags in right column */
+    // const tagList = document.querySelector('.tags');
+
+    // /* [NEW] add html from allTags to tagList */
+    // tagList.innerHTML = allTags.join(' ');
+    // console.log('allTags:', allTags);
   }
   generateTags();
 
@@ -187,10 +195,10 @@
     const activeTags = document.querySelectorAll('a.active[href^="#tag-"]');
 
     /* START LOOP: for each active tag link */
-    for (activeTag of activeTags) {
+    for (let activeTag of activeTags) {
 
       /* remove class active */
-      activeTags.classList.remove('active');
+      activeTag.classList.remove('active');
 
       /* END LOOP: for each active tag link */
     }
@@ -227,5 +235,10 @@
   }
 
   addClickListenersToTags();
+
+  /* KLIKNIĘCIE W AUTORA */
+  function addClickListenersToAuthors() {
+
+  }
 
 }
