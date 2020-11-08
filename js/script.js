@@ -180,7 +180,7 @@
   function tagClickHandler(event) {
     /* prevent default action for this event */
     event.preventDefault();
-    console.log('CZY BYŁ KLIK W TAG?');
+    //console.log('CZY BYŁ KLIK W TAG?');
 
     /* make new constant named "clickedElement" and give it the value of "this" */
     const clickedElement = this;
@@ -237,8 +237,39 @@
   addClickListenersToTags();
 
   /* KLIKNIĘCIE W AUTORA */
-  function addClickListenersToAuthors() {
 
+  function authorClickHandler(event) {
+    event.preventDefault();
+
+    const clickedElement = this;
+
+    const href = clickedElement.getAttribute('href');
+
+    const author = href.replace('#author-', '');
+
+    const activeAuthors = document.querySelectorAll('a.active[href^="#author-"]');
+
+    for (let activeAuthor of activeAuthors) {
+      activeAuthor.classList.remove('active');
+    }
+
+    const authorLinks = document.querySelectorAll('a[href="' + href + '"]');
+
+    for (let authorLink of authorLinks) {
+      authorLink.classList.add('active');
+    }
+
+    generateTitleLinks('[data-author="' + author + '"]');
   }
+
+  function addClickListenersToAuthors() {
+    const authors = document.querySelectorAll('a[href^="#author-"');
+
+    for (let author of authors) {
+      author.addEventListener('click', authorClickHandler);
+    }
+  }
+
+  addClickListenersToAuthors();
 
 }
