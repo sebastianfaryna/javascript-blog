@@ -127,7 +127,7 @@ body {
 
   .tag-size-3 {
     font-size: 125%;
-    color: #32cd32;
+    color: #32CD32;
   }
 
   .tag-size-2 {
@@ -137,13 +137,18 @@ body {
 
   .tag-size-1 {
     font-size: 75%;
-    color: #ff8c00;
+    color: #FF8C00;
   }
 }
 
 /* Authors */
 
 .authors {
+  a {
+    text-decoration: none;
+    color: #444;
+  }
+
   li {
     margin-bottom: 12px;
   }
@@ -161,7 +166,7 @@ body {
 }
 
 .post-author {
-  font-style: italic;
+  font-style: none; /*italic*/
 }
 
 
