@@ -18,7 +18,8 @@
           </ul>
         </aside>
         <section class="posts">
-          <article class="post active" id="article-1" data-tags="pasta tomatoes ham mascarpone" data-author="&#x1F1EE&#x1F1F9 Italian">
+          <article class="post active" id="article-1" data-tags="pasta tomatoes ham mascarpone"
+            data-author="&#x1F1EE&#x1F1F9 Italian">
             <h3 class="post-title">Pasta with dry tomatoes and ham</h3>
             <p class="post-author"></p>
             <div class="post-content">
@@ -39,7 +40,8 @@
               </ul>
             </div>
           </article>
-          <article class="post" id="article-2" data-tags="salmon bluecheese spinach pancakes" data-author="&#x1F41F Fish">
+          <article class="post" id="article-2" data-tags="salmon bluecheese spinach pancakes"
+            data-author="&#x1F41F Fish">
             <h3 class="post-title">Pancakes with salmon, spinach and blue cheese</h3>
             <p class="post-author"></p>
             <div class="post-content">
@@ -61,7 +63,8 @@
               </ul>
             </div>
           </article>
-          <article class="post" id="article-3" data-tags="pasta pesto bluecheese mushrooms" data-author="&#x1F1EE&#x1F1F9 Italian">
+          <article class="post" id="article-3" data-tags="pasta pesto bluecheese mushrooms"
+            data-author="&#x1F1EE&#x1F1F9 Italian">
             <h3 class="post-title">Blue cheese, pesto and mashrooms pasta</h3>
             <p class="post-author"></p>
             <div class="post-content">
@@ -99,7 +102,8 @@
               </ul>
             </div>
           </article>
-          <article class="post" id="article-5" data-tags="broccoli chicken pasta mascarpone" data-author="&#x1F1EE&#x1F1F9 Italian">
+          <article class="post" id="article-5" data-tags="broccoli chicken pasta mascarpone"
+            data-author="&#x1F1EE&#x1F1F9 Italian">
             <h3 class="post-title">Broccoli chicken pasta</h3>
             <p class="post-author"></p>
             <div class="post-content">
@@ -161,7 +165,8 @@
               </ul>
             </div>
           </article>
-          <article class="post" id="article-8" data-tags="tomatoes yeast ham cheese pineapple" data-author="&#x1F355 Pizza">
+          <article class="post" id="article-8" data-tags="tomatoes yeast ham cheese pineapple"
+            data-author="&#x1F355 Pizza">
             <h3 class="post-title">Hawaiian Pizza</h3>
             <p class="post-author"></p>
             <div class="post-content">
@@ -259,6 +264,33 @@
       </main>
     </div>
   </div>
+
+  <!-- HANDLERS TEMPLATES -->
+  <script id="template-article-link" type="text/x-handlebars-template">
+    <li><a href="#{{id}}"><span>{{title}}</span></a></li>
+  </script>
+
+  <script id="template-tag-link" type="text/x-handlebars-template">
+    <li><a href="#tag-{{tag}}"><span>{{tag}}</span></a></li>
+  </script>
+
+  <script id="template-author-link" type="text/x-handlebars-template">
+    <p><a href="#author-{{author}}"><span>{{author}}</span></a></p>
+  </script>
+
+  <script id="template-tags-cloud-link" type="text/x-handlebars-template">
+    {{#each tags}}
+    <li><a href="#tag-{{tag}}" class="tag-size-{{className}}">{{tag}}</a></li>
+    {{/each}}
+  </script>
+
+  <script id="template-authors-list-link" type="text/x-handlebars-template">
+    {{#each authors}}
+    <li><a href="#author-{{author}}">{{author}}</a>   ({{count}})</li>
+    {{/each}}
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.0/handlebars.min.js"></script>
   <script src="js/script.js"></script>
 </body>
 

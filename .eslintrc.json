@@ -30,5 +30,6 @@
         "no-inner-declarations": [
           "off"
         ]
-    }
+    },
+    "globals": {"Handlebars": false}
 }

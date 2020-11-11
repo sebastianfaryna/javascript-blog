@@ -1,6 +1,16 @@
 'use strict';
 
-// SETTINGS. Prefiks opt- znaczy "options".
+/* SZABLONY HANDLEBARS */
+const templates = {
+  articleLink: Handlebars.compile(document.querySelector('#template-article-link').innerHTML),
+  tagLink: Handlebars.compile(document.querySelector('#template-tag-link').innerHTML),
+  authorLink: Handlebars.compile(document.querySelector('#template-author-link').innerHTML),
+  tagCloudLink: Handlebars.compile(document.querySelector('#template-tags-cloud-link').innerHTML),
+  authorsListLink: Handlebars.compile(document.querySelector('#template-authors-list-link').innerHTML)
+};
+
+
+/* SETTINGS. Prefiks opt - "options" */
 const optArticleSelector = '.post',
   optTitleSelector = '.post-title',
   optTitleListSelector = '.titles',
@@ -61,7 +71,12 @@ function generateTitleLinks(customSelector = '') {
     const articleTitle = article.querySelector(optTitleSelector).innerHTML;
 
     // create HTML of the link and save it to the const
-    const linkHTML = '<li><a href="#' + articleId + '"><span>' + articleTitle + '</span></a></li>';
+    // const linkHTML = '<li><a href="#' + articleId + '"><span>' + articleTitle + '</span></a></li>';
+    const linkHTMLData = {
+      id: articleId,
+      title: articleTitle
+    };
+    const linkHTML = templates.articleLink(linkHTMLData);
 
     // insert html link into titleList
     html = html + linkHTML;
@@ -138,7 +153,12 @@ function generateTags() {
     for (let tag of articleTagsArray) {
 
       /* generate HTML of the link */
-      const tagHTML = '<li><a href="#tag-' + tag + '"><span>' + tag + '</span></a></li>';
+      // const tagHTML = '<li><a href="#tag-' + tag + '"><span>' + tag + '</span></a></li>';
+
+      const linkTagData = {
+        tag: tag
+      };
+      const tagHTML = templates.tagLink(linkTagData);
 
       /* add generated code to html variable */
       html = html + tagHTML;
@@ -166,8 +186,11 @@ function generateTags() {
   const tagsParams = calculateTagsParams(allTags);
   // console.log('MAX i MIN tagsParams:', tagsParams);
 
-  /* create variable for all links HTML code */
-  let allTagsHTML = '';
+  /* create variable for store all links HTML code */
+  // let allTagsHTML = ''; /* po dodaniu szablonów usuwamy tą linię */
+  const allTagsData = {
+    tags: []
+  };
 
   /* START LOOP: for each tag in allTags: */
   for (let tag in allTags) {
@@ -176,15 +199,22 @@ function generateTags() {
 
     //const tagLinkHTML = '<li>' + '<a class="' + optCloudClassPrefix + calculateTagClass(allTags[tag], tagsParams) + '"' + 'href="#tag-' + tag + '"' + '>' + tag + '</a>' + ' (' + allTags[tag] + ')' + '</li>'; //z licznikiem wystąpień tagów
 
-    const tagLinkHTML = '<li>' + '<a class="' + optCloudClassPrefix + calculateTagClass(allTags[tag], tagsParams) + '"' + 'href="#tag-' + tag + '"' + '>' + tag + '</a></li>';
+    // const tagLinkHTML = '<li>' + '<a class="' + optCloudClassPrefix + calculateTagClass(allTags[tag], tagsParams) + '"' + 'href="#tag-' + tag + '"' + '>' + tag + '</a></li>';
 
-    allTagsHTML += tagLinkHTML;
+    // allTagsHTML += tagLinkHTML; /* po dodaniu szablonów usuwamy tą linię */
+    allTagsData.tags.push({
+      tag: tag,
+      tagsCount: allTags[tag],
+      className: calculateTagClass(allTags[tag], tagsParams)
+    });
 
     /* END LOOP: for each tag in allTags: */
   }
 
   /* add HTML from allTagsHTML to tagList */
-  tagList.innerHTML = allTagsHTML;
+  // tagList.innerHTML = allTagsHTML; /* po dodaniu szablonów usuwamy tą linię */
+  tagList.innerHTML = templates.tagCloudLink(allTagsData);
+  console.log('allTagsData: ', allTagsData);
 
 }
 
@@ -213,7 +243,12 @@ function generateAuthors() {
     const articleAuthor = article.getAttribute('data-author');
 
     /* generate HTML of the link */
-    const authorHTML = '<a href="#author-' + articleAuthor + '"><span>' + articleAuthor + '</span></a>';
+    // const authorHTML = '<a href="#author-' + articleAuthor + '"><span>' + articleAuthor + '</span></a>';
+
+    const authorHTMLData = {
+      author: articleAuthor
+    };
+    const authorHTML = templates.authorsListLink(authorHTMLData);
 
     /* add generated code to html variable */
     html = html + authorHTML;
@@ -235,44 +270,30 @@ function generateAuthors() {
   const authorsList = document.querySelector(optAuthorsListSelector);
 
   /* variable for all authorHtml */
-  let html = '';
+  // let html = ''; /* <-- po dodaniu szablonów usuwamy tą linię */
+  const allAuthorsData = {
+    authors: []
+  };
+
   /* START LOOP for each article's author in allAuthor */
   for (let articleAuthor in allAuthors) {
-    const authorLinkHTML = '<li><a href="#author-' + articleAuthor + '">' + articleAuthor + '</a>' + '   (' + allAuthors[articleAuthor] + ')</li>';
-    //    console.log('czy linki się generują?', authorLinkHTML);
-    html = html + authorLinkHTML;
+    // const authorLinkHTML = '<li><a href="#author-' + articleAuthor + '">' + articleAuthor + '</a>' + '   (' + allAuthors[articleAuthor] + ')</li>';
+
+    allAuthorsData.authors.push({
+      author: articleAuthor,
+      count: allAuthors[articleAuthor]
+    });
+
+    //  console.log('czy linki się generują?', authorLinkHTML);
+    //  html = html + authorLinkHTML;
+
     /* END LOOP */
   }
 
-  authorsList.innerHTML = html;
+  authorsList.innerHTML = templates.authorsListLink(allAuthorsData);
 
 }
 generateAuthors();
-
-// /*      AUTORZY ARTYKUŁU      */
-// function generateAuthors() {
-
-//   const articles = document.querySelectorAll(optArticleSelector);
-
-//   /* START LOOP for every article */
-//   for (let article of articles) {
-
-//     /* find authors wrapper */
-//     const authorWrapper = article.querySelector(optArticleAuthorSelector);
-
-//     /* get authors from data-author attribute */
-//     const articleAuthor = article.getAttribute('data-author');
-
-//     /* generate HTML of the link */
-//     const tagHTML = 'by <a href="#author-' + articleAuthor + '"><span>' + articleAuthor + '</span></a>';
-
-//     /* insert HTML of all the links into the tags wrapper */
-//     authorWrapper.innerHTML = tagHTML;
-
-//     /* END LOOP: for every article: */
-//   }
-// }
-// generateAuthors();
 
 /*    KLINIĘCIE W TAG   */
 function tagClickHandler(event) {
