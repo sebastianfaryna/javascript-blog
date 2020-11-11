@@ -3,37 +3,30 @@
 const titleClickHandler = function(event) {
   event.preventDefault();
   const clickedElement = this;
-  // console.log('Link was clicked!');
-  // console.log(event);
 
   // remove class 'active' from all article links  //
   const activeLinks = document.querySelectorAll('.titles a.active');
 
   for (let activeLink of activeLinks) {
     activeLink.classList.remove('active');
-    // console.log(activeLink);
   }
 
   // add class 'active' to the clicked link //
   clickedElement.classList.add('active');
-  // console.log('add class ACTIVE:', clickedElement);
 
   // remove class 'active' from all articles //
   const activeArticles = document.querySelectorAll('.posts article.active');
 
   for (let activeArticle of activeArticles) {
     activeArticle.classList.remove('active');
-    // console.log(activeArticle);
   }
 
   // get 'href' attribute from the clicked link //
   const articleSelector = clickedElement.getAttribute('href');
-  // console.log(articleSelector);
 
   // find the correct article using the selector (value of 'href' attribute) //
   const targetArticle = document.querySelector(articleSelector);
   targetArticle.classList.add('active');
-  // console.log('FIND href targetArticle', targetArticle);
 };
 
 // Zapisanie ustawień skryptu w stałych. Prefiks opt- znaczy "options".
@@ -42,7 +35,9 @@ const optArticleSelector = '.post',
   optTitleListSelector = '.titles',
   optArticleTagsSelector = '.post-tags .list',
   optArticleAuthorSelector = '.post-author',
-  optTagsListSelector = '.tags.list';
+  optTagsListSelector = '.tags.list',
+  optCloudClassCount = 4,
+  optCloudClassPrefix = 'tag-size-';
 
 function generateTitleLinks(customSelector = '') {
 
@@ -55,19 +50,15 @@ function generateTitleLinks(customSelector = '') {
   // for each article
   const articles = document.querySelectorAll(optArticleSelector + customSelector);
   for (let article of articles) {
-    console.log('CUSTOM SELECTOR', optArticleSelector + customSelector);
 
     // get the article id and save it to the const
     const articleId = article.getAttribute('id');
-    // console.log('articleId:', articleId);
 
     // find the title element & get the title from the title element
     const articleTitle = article.querySelector(optTitleSelector).innerHTML;
-    // console.log('articleTitle:', articleTitle);
 
     // create HTML of the link and save it to the const
     const linkHTML = '<li><a href="#' + articleId + '"><span>' + articleTitle + '</span></a></li>';
-    // console.log(linkHTML);
 
     // insert html link into titleList
     html = html + linkHTML;
@@ -78,7 +69,6 @@ function generateTitleLinks(customSelector = '') {
 
   // kliknięcia w linki
   const links = document.querySelectorAll('.titles a');
-  // console.log('links:', links);
   for (let link of links) {
     link.addEventListener('click', titleClickHandler);
   }
@@ -86,6 +76,40 @@ function generateTitleLinks(customSelector = '') {
 }
 
 generateTitleLinks();
+
+/* PARAMETRY TAGÓW */
+
+function calculateTagsParams(tags) {
+  const params = {
+    max: 0,
+    min: 999999,
+  };
+
+  for (let tag in tags) {
+    if (tags[tag] > params.max) {
+      params.max = tags[tag];
+      // console.log(tag + ' is used ' + tags[tag] + ' MAX times');
+    }
+    if (tags[tag] < params.min) {
+      params.min = tags[tag];
+      // console.log(tag + ' is used ' + tags[tag] + ' MIN times');
+    }
+  }
+
+  return params;
+}
+/* OBLICZANIE NUMERU KLASY TAGU
+
+alternatywnie: classNumber = Math.floor( ( (count - params.min) / (params.max - params.min) ) * optCloudClassCount + 1 ); */
+function calculateTagClass(count, params) {
+  const normalizedCount = count - params.min;
+  const normalizedMax = params.max - params.min;
+  const percentage = normalizedCount / normalizedMax;
+  const classNumber = Math.floor(percentage * (optCloudClassCount - 1) + 1);
+  return classNumber;
+}
+
+
 
 function generateTags() {
 
@@ -121,13 +145,12 @@ function generateTags() {
 
       /* [NEW] check if this link is NOT already in allTags */
       if (!allTags[tag]) {
-        /* [NEW] add generated code to allTags object */
+        /* [NEW] add generated code to allTags object ZLICZANIE ILOŚCI WYSTĄPIEŃ TAGÓW*/
         allTags[tag] = 1;
       } else {
         allTags[tag]++;
       }
 
-      // console.log('allTags', allTags);
       /* END LOOP: for each tag */
     }
 
@@ -140,6 +163,9 @@ function generateTags() {
   /* [NEW] find list of tags in right column */
   const tagList = document.querySelector('.tags');
 
+  const tagsParams = calculateTagsParams(allTags);
+  console.log('tagsParams:', tagsParams);
+
   /* [NEW] create variable for all links HTML code */
   let allTagsHTML = '';
 
@@ -147,7 +173,12 @@ function generateTags() {
   for (let tag in allTags) {
 
     /* [NEW] generate code of a link and add it to allTagsHTML */
-    allTagsHTML += '<a href="#tag-' + tag + '"><span>' + tag + '</span></a>' + ' (' + allTags[tag] + ') ';
+
+    //const tagLinkHTML = '<li>' + '<a class="' + optCloudClassPrefix + calculateTagClass(allTags[tag], tagsParams) + '"' + 'href="#tag-' + tag + '"' + '>' + tag + '</a>' + ' (' + allTags[tag] + ')' + '</li>'; //z licznikiem wystąpień tagów
+
+    const tagLinkHTML = '<li>' + '<a class="' + optCloudClassPrefix + calculateTagClass(allTags[tag], tagsParams) + '"' + 'href="#tag-' + tag + '"' + '>' + tag + '</a></li>';
+
+    allTagsHTML += tagLinkHTML;
 
     /* [NEW] END LOOP: for each tag in allTags: */
   }
@@ -174,7 +205,6 @@ function generateAuthors() {
 
     /* get authors from data-author attribute */
     const articleAuthor = article.getAttribute('data-author');
-    // console.log('AUTOR:', articleAuthor);
 
     /* generate HTML of the link */
     const tagHTML = 'by <a href="#author-' + articleAuthor + '"><span>' + articleAuthor + '</span></a>';
@@ -193,7 +223,6 @@ generateAuthors();
 function tagClickHandler(event) {
   /* prevent default action for this event */
   event.preventDefault();
-  //console.log('CZY BYŁ KLIK W TAG?');
 
   /* make new constant named "clickedElement" and give it the value of "this" */
   const clickedElement = this;
