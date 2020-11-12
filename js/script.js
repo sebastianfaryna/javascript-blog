@@ -16,9 +16,7 @@ const optArticleSelector = '.post',
   optTitleListSelector = '.titles',
   optArticleTagsSelector = '.post-tags .list',
   optArticleAuthorSelector = '.post-author',
-  optTagsListSelector = '.tags.list',
   optCloudClassCount = 4,
-  optCloudClassPrefix = 'tag-size-',
   optAuthorsListSelector = '.authors.list';
 
 /* kliknie w artykuły po lewej */
@@ -248,7 +246,7 @@ function generateAuthors() {
     const authorHTMLData = {
       author: articleAuthor
     };
-    const authorHTML = templates.authorsListLink(authorHTMLData);
+    const authorHTML = templates.authorLink(authorHTMLData);
 
     /* add generated code to html variable */
     html = html + authorHTML;
